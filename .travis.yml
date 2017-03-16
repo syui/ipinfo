@@ -1,0 +1,30 @@
+language: go
+
+go:
+        - 1.7
+
+branches:
+        only: master
+
+before_install:
+        - go get -v github.com/mitchellh/gox
+        - go get -v github.com/tcnksm/ghr
+        - openssl aes-256-cbc -K $encrypted_3a6a7fa1aca9_key -iv $encrypted_3a6a7fa1aca9_iv -in api_key.txt.enc -out api_key.txt -d
+        - sudo pip install codecov
+
+script:
+        - go test -v -coverprofile=coverage.txt -covermode=count
+
+after_success:
+        - gox -output "dist/{{.OS}}_{{.Arch}}_{{.Dir}}"
+        - sh scripts/package.sh
+        - ghr --username syui --token $GITHUB_TOKEN --replace --prerelease --debug pre-release dist/
+        - codecov
+
+deploy:
+  provider: releases
+  api_key:
+    secure: Zw/xzWG/cxn3R4S/JMuwS1iIorCg6vqO7ego8ClI8JVKNbVNuoBrFvsjJS9LvBFnASHZB1gNqLnCu3Ei2xMlmQUmBxH4SFUYxWtwa/EAh7a6hA7d7Cgnb5fTuPkRJa6Ok6sh464cHnnB0arH6UyQhodHirPEYXQuHnuE7U1j6Y/WEAE82k2AI06E6qa21xlBqUxjJ3hel6eo2kCL6BB6C81orvuQsJ2sq62c2g0VNNWX1BcJxRg/5AFnFH+t9OO3FphA+4pjmNS6ntNy99IugAXy6avmRhB91+XCsdv1Sx9QS0H4G2RI1Yhv9zr905YWgkRGnphkviqcDvglOtlBfZvcH14zl+4yJnT1kfIxDVRhPhlkuUfE9GPnETGAeOvaGOhIoa9JuNOkbTjIcGwQiZjvLe+uIHf0Pc/bSznzlfpXOh2NuPe348728tD/TP5bFboT+NQXiDC9EstAKVmNPHNACJPVZnRbcXfyX7mYf8Pd8X6/j6S6ICIhHfCv6fCakDrCDfKMHGISWmbMPFr8Fi2Ty3cgD1GeL10wFDuUwMiMxfHS/ISjWnJDp9dqdC8sVxIZrsF1LlDuncQUGUyOoDis6CerDutyQhuZknqrmkFwNaNaCPFdZCBKFYzcxvWUfRZEkRD3Kfykffan6Md0iYTp+v5an8on2TevK2SqxUg=
+  file: ipinfo.go
+  on:
+    repo: syui/ipinfo
