@@ -7,7 +7,7 @@ branches:
         only: master
 
 before_install:
-
+        - go get -t -v ./...
         - go get -v github.com/mitchellh/gox
         - go get -v github.com/tcnksm/ghr
         - go get golang.org/x/tools/cmd/cover
@@ -15,9 +15,8 @@ before_install:
         - openssl aes-256-cbc -K $encrypted_70a04b73fe89_key -iv $encrypted_70a04b73fe89_iv -in api_key.txt.enc -out api_key.txt -d
     
 script:
-        - go test -v -coverprofile=coverage.txt -covermode=count
+        - go test -race -coverprofile=coverage.txt -covermode=atomic
         - ./go.test.sh
-
         
 after_success:
         - gox -output "dist/{{.OS}}_{{.Arch}}_{{.Dir}}"
