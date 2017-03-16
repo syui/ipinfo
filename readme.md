@@ -41,5 +41,4 @@ test : codecov
 
 reviews : arch-bot
 
-[![codecov](https://codecov.io/gh/syui/darksky.go/branch/master/graph/badge.svg)](https://codecov.io/gh/syui/darksky.go)
 
