@@ -16,11 +16,9 @@ before_install:
     
 script:
         - go test -race -coverprofile=coverage.txt -covermode=atomic
-        - ./go.test.sh 
 
 after_success:
         - gox -output "dist/{{.OS}}_{{.Arch}}_{{.Dir}}"
         - sh scripts/package.sh
         - ghr --username syui --token $GITHUB_TOKEN --replace --prerelease --debug pre-release dist/
-        - bash <(curl -s https://codecov.io/bash)
         - codecov
