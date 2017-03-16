@@ -7,17 +7,21 @@ branches:
         only: master
 
 before_install:
+
         - go get -v github.com/mitchellh/gox
         - go get -v github.com/tcnksm/ghr
+        - go get golang.org/x/tools/cmd/cover
         - sudo pip install codecov
         - openssl aes-256-cbc -K $encrypted_70a04b73fe89_key -iv $encrypted_70a04b73fe89_iv -in api_key.txt.enc -out api_key.txt -d
     
 script:
         - go test -v -coverprofile=coverage.txt -covermode=count
+        - ./go.test.sh
 
+        
 after_success:
         - gox -output "dist/{{.OS}}_{{.Arch}}_{{.Dir}}"
         - sh scripts/package.sh
         - ghr --username syui --token $GITHUB_TOKEN --replace --prerelease --debug pre-release dist/
+        - bash <(curl -s https://codecov.io/bash)
         - codecov
-
