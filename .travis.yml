@@ -16,7 +16,6 @@ before_install:
     
 script:
         - go test -race -coverprofile=coverage.txt -covermode=atomic
-        - ./go.test.sh
         
 after_success:
         - gox -output "dist/{{.OS}}_{{.Arch}}_{{.Dir}}"
