@@ -9,8 +9,8 @@ branches:
 before_install:
         - go get -v github.com/mitchellh/gox
         - go get -v github.com/tcnksm/ghr
-        - openssl aes-256-cbc -K $encrypted_3a6a7fa1aca9_key -iv $encrypted_3a6a7fa1aca9_iv -in api_key.txt.enc -out api_key.txt -d
         - sudo pip install codecov
+        - openssl aes-256-cbc -K $encrypted_70a04b73fe89_key -iv $encrypted_70a04b73fe89_iv -in api_key.txt.enc -out api_key.txt -d
 
 script:
         - go test -v -coverprofile=coverage.txt -covermode=count
